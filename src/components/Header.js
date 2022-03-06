@@ -1,8 +1,11 @@
-import { Form, Navbar } from 'react-bootstrap';
+import { Dropdown, Form, Navbar } from 'react-bootstrap';
 import React, { useContext } from 'react';
 
+import { AiFillDelete } from "react-icons/ai";
 import { CartContext } from '../context/CartContext';
+import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const Header = () => {
 
@@ -12,10 +15,12 @@ const Header = () => {
     productDispatch     //we will provide users the ability to search query their products
   } = useContext(CartContext);
 
+  const location = useLocation();
+
   return (
-    <Navbar bg="dark" style={{ height: '80px' }}>
+    <Navbar bg="dark" style={{ height: '80px', justifyContent: 'space-between' }}>
       <Navbar.Brand>
-        <Link to="/cart"> Shopping Cart </Link>
+        <Link to={location.pathname === '/' ? "/cart" : '/'}> Shopping Cart </Link>
       </Navbar.Brand>
       <Navbar.Text>
         <Form.Control
@@ -31,6 +36,43 @@ const Header = () => {
         >
         </Form.Control>
       </Navbar.Text>
+      <Dropdown alignRight>
+        <Dropdown.Toggle variant="success">
+          <FaShoppingCart color="white" fontSize="25px" />
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu style={{ minWidth: '370px' }}>
+          {cart.length > 0 ? (
+            <>
+              {cart.map((cartItem) => (
+                <span className="cartItem" key={cartItem.id}>
+                  <img
+                    src={cartItem.image}
+                    alt={cartItem.name}
+                    className="cartItemImg"
+                  />
+                  <div className="cartItemDetail">
+                    <span>{cartItem.name}</span>
+                    <span>${cartItem.price}</span>
+                  </div>
+                  <AiFillDelete
+                    fontSize="20px"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => {
+                      cartDispatch({
+                        type: 'REMOVE_FROM_CART',
+                        payload: cartItem
+                      })
+                    }}
+                  />
+                </span>
+              ))}
+            </>
+          ) :
+            <span style={{ padding: '10px' }}>Cart is empty!</span>
+          }
+        </Dropdown.Menu>
+      </Dropdown>
     </Navbar>
   )
 }

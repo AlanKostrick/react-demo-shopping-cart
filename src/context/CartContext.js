@@ -1,11 +1,13 @@
+import { cartReducer, productReducer } from "./Reducers";
 import { createContext, useReducer } from "react";
-
-import { productReducer } from "./Reducers";
 
 export const CartContext = createContext();
 
 const CartContextProvider = (props) => {
 
+  const [cartState, cartDispatch] = useReducer(cartReducer, {
+    cart: []
+  })
 
   const [productState, productDispatch] = useReducer(productReducer, {
     byFastDelivery: false,
@@ -14,7 +16,7 @@ const CartContextProvider = (props) => {
   });
 
   return (
-    <CartContext.Provider value={{ productState, productDispatch }}>
+    <CartContext.Provider value={{ cartState, cartDispatch, productState, productDispatch }}>
       {props.children}
     </CartContext.Provider>
   )

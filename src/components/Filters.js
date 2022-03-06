@@ -1,9 +1,14 @@
 import { Button, Form } from 'react-bootstrap';
+import React, { useContext } from 'react';
 
+import { CartContext } from '../context/CartContext';
 import Rating from './Rating';
-import React from 'react';
 
 const Filters = () => {
+
+  const { productState, productDispatch } = useContext(CartContext)
+  const { byFastDelivery, byRating } = productState;
+
   return (
     <div className="filters">
       <span className="title">Filter Products</span>
@@ -11,16 +16,32 @@ const Filters = () => {
         <Form.Check
           label="Fast Delivery Only"
           type="checkbox"
+          onChange={() =>
+            productDispatch({
+              type: 'FILTER_BY_DELIVERY'
+            })
+          }
+          checked={byFastDelivery}
         />
       </span>
       <span>
         <Rating
-          rating={''}
+          rating={byRating}
+          onClick={(index) =>
+            productDispatch({
+              type: 'FILTER_BY_RATING',
+              payload: index + 1
+            })
+          }
         />
       </span>
       <Button
         variant="light"
-        onClick={() => console.log('clear filter')}
+        onClick={() =>
+          productDispatch({
+            type: "CLEAR_FILTERS"
+          })
+        }
       >Clear Filters</Button>
     </div>
   )

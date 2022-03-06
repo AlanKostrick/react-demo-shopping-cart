@@ -21,10 +21,6 @@ const Home = () => {
   //destruct attributes from productState
   const { byFastDelivery, byRating, searchQuery } = productState;
 
-  const { cartState: { cart } } = useContext(CartContext)
-  console.log(cart);
-
-
   const filterProductsHandler = () => {
     let filteredProducts = products;
 
